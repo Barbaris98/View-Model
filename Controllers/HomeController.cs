@@ -30,10 +30,17 @@ namespace WebApplication14.Controllers
             // формириуем список компаний для передачи в представление
             List<CompanyModel> compModels = companies
                 .Select(c => new CompanyModel(c.Id, c.Name)).ToList();
+
             // добавляем на первое место
-            compModels
+            compModels.Insert(0, new CompanyModel(0, "Все"));
+            IndexViewModel viewModel = new() { Companies = compModels, People = people};
 
-
+            //если передан id  компании, то фильтруем список
+            if (companyId != null && companyId > 0)
+            {
+                viewModel.People = people.Where(p => p.Work.Id == companyId);
+            }
+            return View(viewModel);
         }
 
 
